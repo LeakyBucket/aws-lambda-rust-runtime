@@ -41,6 +41,7 @@ use log::*;
 use serde;
 use serde_json;
 use std::fmt::Display;
+use std::str;
 use tokio::runtime::Runtime as TokioRuntime;
 
 pub use lambda_runtime_core::Context;
@@ -81,7 +82,7 @@ where
     EventError: Fail + LambdaErrorExt + Display + Send + Sync,
 {
     move |ev, ctx| {
-        info!("Event: {:?}", ev);
+        info!("Event: {:?}", str::from_utf8(&ev));
         let event: Event = serde_json::from_slice(&ev)?;
         match h.run(event, ctx) {
             Ok(out) => {
