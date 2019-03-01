@@ -37,6 +37,7 @@
 //! ```
 use failure::Fail;
 use lambda_runtime_core::{start_with_config, EnvConfigProvider, HandlerError, LambdaErrorExt};
+use log::*;
 use serde;
 use serde_json;
 use std::fmt::Display;
@@ -80,6 +81,7 @@ where
     EventError: Fail + LambdaErrorExt + Display + Send + Sync,
 {
     move |ev, ctx| {
+        info!("Event: {:?}", ev);
         let event: Event = serde_json::from_slice(&ev)?;
         match h.run(event, ctx) {
             Ok(out) => {
